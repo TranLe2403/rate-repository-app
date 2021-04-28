@@ -1,16 +1,12 @@
 import React from "react";
-import { Text as NativeText, StyleSheet, Platform } from "react-native";
+import { Text as NativeText, StyleSheet } from "react-native";
 import theme from "../theme";
 
 const styles = StyleSheet.create({
   text: {
     color: theme.colors.textPrimary,
     fontSize: theme.fontSizes.body,
-    fontFamily: Platform.select({
-      android: "Roboto",
-      ios: "Arial",
-      default: theme.fonts.main,
-    }),
+    fontFamily: theme.fonts.main,
     fontWeight: theme.fontWeights.normal,
   },
   colorTextSecondary: {
