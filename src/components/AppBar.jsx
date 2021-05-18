@@ -21,8 +21,17 @@ const styles = StyleSheet.create({
   scrollView: {
     alignItems: "center",
   },
+  barTabContainer: {
+    marginLeft: 10,
+    display: "flex",
+    flexDirection: "row",
+  },
   viewMarginRight: {
     marginRight: 20,
+  },
+  subTabsContainer: {
+    display: "flex",
+    flexDirection: "row",
   },
 });
 
@@ -43,8 +52,13 @@ const AppBar = () => {
   return (
     <View style={styles.container}>
       <ScrollView horizontal contentContainerStyle={styles.scrollView}>
-        <View style={styles.viewMarginRight}>
-          <AppBarTab tabName="Repositories" />
+        <View style={styles.barTabContainer}>
+          <AppBarTab tabName="Repositories" linkto="/" />
+          {data?.authorizedUser !== null ? (
+            <AppBarTab tabName="Create a review" linkto="/review" />
+          ) : (
+            <AppBarTab tabName="Sign Up" linkto="/signup" />
+          )}
         </View>
         {data?.authorizedUser !== null ? (
           <Pressable onPress={signoutHandler}>

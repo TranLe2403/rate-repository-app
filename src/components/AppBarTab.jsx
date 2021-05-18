@@ -1,14 +1,25 @@
 import React from "react";
-import { Pressable } from "react-native";
+import { Pressable, StyleSheet } from "react-native";
 import { Link } from "react-router-native";
 
 import Text from "./Text";
 
-const AppBarTab = ({ tabName }) => {
+const styles = StyleSheet.create({
+  linkMargin: {
+    marginRight: 20,
+  },
+});
+
+const AppBarTab = ({ tabName, linkto }) => {
   return (
     <Pressable onPress={() => console.log("click me")}>
-      <Link to="/about">
-        <Text color="whiteText" fontSize="subheading" fontWeight="bold">
+      <Link to={linkto}>
+        <Text
+          color="whiteText"
+          fontSize="subheading"
+          fontWeight="bold"
+          style={styles.linkMargin}
+        >
           {tabName}
         </Text>
       </Link>

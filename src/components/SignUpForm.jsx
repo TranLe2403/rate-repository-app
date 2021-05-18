@@ -3,6 +3,8 @@ import { Pressable, View, StyleSheet } from "react-native";
 import { Formik } from "formik";
 import * as yup from "yup";
 import { useHistory } from "react-router-native";
+import { useMutation } from "@apollo/client";
+import { CREATE_USER } from "../graphql/mutations";
 
 import theme from "../theme";
 import Text from "./Text";
@@ -10,13 +12,26 @@ import FormikTextInput from "./FormikTextInput";
 import useSignIn from "../hooks/useSignIn";
 
 const validationSchema = yup.object().shape({
-  username: yup.string().required("username is required"),
-  password: yup.string().required("password is required"),
+  username: yup
+    .string()
+    .required("username is required")
+    .min(1, "Must be at least 1 digits")
+    .max(30, "Must be not over 30 digits"),
+  password: yup
+    .string()
+    .required("password is required")
+    .min(5, "Must be at least 5 digits")
+    .max(30, "Must be not over 30 digits"),
+  password_confirm: yup
+    .string()
+    .oneOf([yup.ref("password"), null])
+    .required("password confirmation is required"),
 });
 
 const initialValues = {
   username: "",
   password: "",
+  password_confirm: "",
 };
 
 const styles = StyleSheet.create({
@@ -32,41 +47,43 @@ const styles = StyleSheet.create({
   },
 });
 
-export const SignInForm = ({ onSubmit }) => {
+export const ReviewForm = ({ onSubmit }) => {
   return (
     <View>
+      <FormikTextInput name="username" placeholder="username" />
+      <FormikTextInput name="password" placeholder="password" />
       <FormikTextInput
-        name="username"
-        placeholder="username"
-        testID="username-input-test"
-      />
-      <FormikTextInput
-        name="password"
-        placeholder="password"
-        testID="password-input-test"
+        name="password_confirm"
+        placeholder="password confirmation"
       />
       <Pressable
         style={styles.buttonContainer}
         onPress={onSubmit}
-        testID="submit-button-test"
+        testID="signup-button-test"
       >
         <Text style={styles.signinText} fontWeight="bold" fontSize="subheading">
-          Sign in
+          Sign Up
         </Text>
       </Pressable>
     </View>
   );
 };
 
-export const SignInContainer = ({ signIn }) => {
+export const ReviewCreationContainer = () => {
+  const [mutate] = useMutation(CREATE_USER);
+  const [signIn] = useSignIn();
   let history = useHistory();
 
   const onSubmit = async (values) => {
     const { username, password } = values;
 
     try {
+      await mutate({
+        variables: { username, password },
+      });
       await signIn({ username, password });
-      history.push("/");
+
+      history.push(`/`);
     } catch (e) {
       console.log(e);
     }
@@ -78,15 +95,9 @@ export const SignInContainer = ({ signIn }) => {
       onSubmit={onSubmit}
       validationSchema={validationSchema}
     >
-      {({ handleSubmit }) => <SignInForm onSubmit={handleSubmit} />}
+      {({ handleSubmit }) => <ReviewForm onSubmit={handleSubmit} />}
     </Formik>
   );
 };
 
-const SignIn = () => {
-  const [signIn] = useSignIn();
-
-  return <SignInContainer signIn={signIn} />;
-};
-
-export default SignIn;
+export default ReviewCreationContainer;

@@ -11,7 +11,11 @@ const Count = ({ text, number }) => {
 
   return (
     <View>
-      <Text fontSize="subheading" fontWeight="bold">
+      <Text
+        fontSize="subheading"
+        fontWeight="bold"
+        testID={`${text}-count-test`}
+      >
         {rounded}
       </Text>
       <Text>{text}</Text>

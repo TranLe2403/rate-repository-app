@@ -41,7 +41,6 @@ const styles = StyleSheet.create({
     maxWidth: 80,
     alignItems: "center",
     justifyContent: "center",
-    color: theme.colors.white,
     borderRadius: 5,
     marginTop: 10,
     marginLeft: 10,
@@ -55,6 +54,14 @@ const styles = StyleSheet.create({
 });
 
 const RepositoryItem = ({ item }) => {
+  if (!item) {
+    return (
+      <View>
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.detailContainer}>
@@ -66,13 +73,17 @@ const RepositoryItem = ({ item }) => {
         />
         <View>
           <View style={styles.details}>
-            <Text fontWeight="bold">{item.fullName}</Text>
+            <Text fontWeight="bold" testID="fullname-test">
+              {item.fullName}
+            </Text>
             <View style={styles.descriptionBox}>
-              <Text>{item.description}</Text>
+              <Text testID="description-test">{item.description}</Text>
             </View>
           </View>
           <View style={styles.languageTag}>
-            <Text color="whiteText">{item.language}</Text>
+            <Text color="whiteText" testID="language-test">
+              {item.language}
+            </Text>
           </View>
         </View>
       </View>
